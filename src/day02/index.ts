@@ -1,5 +1,4 @@
 import run from "aocrunner";
-import { send } from "process";
 
 const parseInput = (rawInput: string) => {
   const lines = rawInput.split("\n");
@@ -16,28 +15,21 @@ const parseInput = (rawInput: string) => {
 };
 
 const validateReport = (report: number[]): boolean => {
-  let invalid = false;
   let increasing: boolean | null = null;
 
   for (let y = 0; y < report.length - 1; y++) {
-    if (y !== report.length) {
-      let diff = report[y] - report[y + 1];
-      const absDiff = Math.abs(diff);
-      const step = diff === absDiff;
+    const diff = report[y] - report[y + 1];
+    const absDiff = Math.abs(diff);
+    const stepIncrease = diff === absDiff;
 
-      if (y === 0) {
-        increasing = step;
-      }
-
-      if (step != increasing || absDiff < 1 || absDiff > 3) {
-        invalid = true;
-      }
-    }
+    if (absDiff < 1 || absDiff > 3) return false;
+    if (increasing === null) increasing = stepIncrease;
+    if (stepIncrease != increasing) return false;
   }
-
-  return !invalid;
+  return true;
 };
 
+// TODO: Refactor this
 const applyDampener = (report: number[]): boolean => {
   let valid = false;
   let dampenedReports = [];
@@ -58,31 +50,22 @@ const applyDampener = (report: number[]): boolean => {
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
-  let safeReports = 0;
 
-  for (let x = 0; x < input.length; x++) {
-    if (validateReport(input[x])) {
-      safeReports += 1;
-    }
-  }
-  return safeReports.toString();
+  let validReports = input.reduce((count, report) => {
+    return count + (validateReport(report) ? 1 : 0);
+  }, 0);
+
+  return validReports.toString();
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
-  let safeReports = 0;
 
-  for (let x = 0; x < input.length; x++) {
-    if (validateReport(input[x])) {
-      safeReports += 1;
-    } else {
-      if (applyDampener(input[x])) {
-        safeReports += 1;
-      }
-    }
-  }
+  let validReports = input.reduce((count, report) => {
+    return count + (validateReport(report) ? 1 : applyDampener(report) ? 1 : 0);
+  }, 0);
 
-  return safeReports.toString();
+  return validReports.toString();
 };
 
 run({
