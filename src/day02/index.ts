@@ -31,7 +31,6 @@ const validateReport = (report: number[]): boolean => {
 
 // TODO: Refactor this
 const applyDampener = (report: number[]): boolean => {
-  let valid = false;
   let dampenedReports = [];
   for (let x = 0; x < report.length; x++) {
     const filteredReport = structuredClone(report);
@@ -39,13 +38,7 @@ const applyDampener = (report: number[]): boolean => {
     dampenedReports.push(filteredReport);
   }
 
-  for (const report of dampenedReports) {
-    if (validateReport(report)) {
-      valid = true;
-      break;
-    }
-  }
-  return valid;
+  return dampenedReports.some(validateReport);
 };
 
 const part1 = (rawInput: string) => {
