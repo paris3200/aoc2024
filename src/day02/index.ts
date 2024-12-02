@@ -15,7 +15,7 @@ const parseInput = (rawInput: string) => {
   return reports;
 };
 
-const processReport = (report: number[]): boolean => {
+const validateReport = (report: number[]): boolean => {
   let invalid = false;
   let increasing: boolean | null = null;
 
@@ -35,91 +35,50 @@ const processReport = (report: number[]): boolean => {
     }
   }
 
-  return invalid;
+  return !invalid;
 };
 
-const processReports = (input) => {
-  let safeReports = 0;
-
-  for (let x = 0; x < input.length; x++) {
-    let invalid = false;
-    let increasing: boolean | null = null;
-
-    for (let y = 0; y < input[x].length - 1; y++) {
-      if (y !== input[x].length) {
-        let diff = input[x][y] - input[x][y + 1];
-        const absDiff = Math.abs(diff);
-
-        const step = diff === absDiff;
-
-        if (y === 0) {
-          increasing = step;
-        }
-
-        if (step != increasing || absDiff < 1 || absDiff > 3) {
-          invalid = true;
-        }
-      }
-    }
-
-    if (invalid === false) {
-      safeReports += 1;
-    }
+const applyDampener = (report: number[]): boolean => {
+  let valid = false;
+  let dampenedReports = [];
+  for (let x = 0; x < report.length; x++) {
+    const filteredReport = structuredClone(report);
+    filteredReport.splice(x, 1);
+    dampenedReports.push(filteredReport);
   }
 
-  return safeReports;
+  for (const report of dampenedReports) {
+    if (validateReport(report)) {
+      valid = true;
+      break;
+    }
+  }
+  return valid;
 };
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
-  return processReports(input).toString();
+  let safeReports = 0;
+
+  for (let x = 0; x < input.length; x++) {
+    if (validateReport(input[x])) {
+      safeReports += 1;
+    }
+  }
+  return safeReports.toString();
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
-
   let safeReports = 0;
 
   for (let x = 0; x < input.length; x++) {
-    let invalid = false;
-    let increasing: boolean | null = null;
-    let dampener: boolean | null = null;
-
-    for (let y = 0; y < input[x].length - 1; y++) {
-      if (y !== input[x].length) {
-        let diff = input[x][y] - input[x][y + 1];
-        const absDiff = Math.abs(diff);
-
-        const step = diff === absDiff;
-
-        if (y === 0) {
-          increasing = step;
-        }
-
-        if (step != increasing || absDiff < 1 || absDiff > 3) {
-          if (dampener === null) {
-            const copyReportA = structuredClone(input[x]);
-            const copyReportB = structuredClone(input[x]);
-            copyReportA.splice(y, 1);
-            copyReportB.splice(y + 1, 1);
-
-            if (
-              processReport(copyReportA) === false &&
-              processReport(copyReportB) === false
-            ) {
-              invalid = true;
-            }
-
-            break;
-          } else {
-            invalid = true;
-          }
-        }
-      }
-    }
-
-    if (invalid === false) {
+    if (validateReport(input[x])) {
       safeReports += 1;
+    } else {
+      if (applyDampener(input[x])) {
+        safeReports += 1;
+      }
     }
   }
 
