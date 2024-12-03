@@ -31,14 +31,12 @@ const validateReport = (report: number[]): boolean => {
 
 // TODO: Refactor this
 const applyDampener = (report: number[]): boolean => {
-  let dampenedReports = [];
   for (let x = 0; x < report.length; x++) {
     const filteredReport = structuredClone(report);
     filteredReport.splice(x, 1);
-    dampenedReports.push(filteredReport);
+    if (validateReport(filteredReport)) return true;
   }
-
-  return dampenedReports.some(validateReport);
+  return false;
 };
 
 const part1 = (rawInput: string) => {
