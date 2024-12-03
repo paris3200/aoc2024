@@ -4,23 +4,33 @@ const parseInput = (rawInput: string) => {
   return rawInput.split("\n");
 };
 
-const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
+const parseValidInput = (input: string): number => {
   const re = /mul\(\d+,\s*\d+\)/g;
   let products = [];
 
-  for (let x = 0; x < input.length; x++) {
-    let matches = input[x].match(re);
-    for (let y = 0; y < matches.length; y++) {
-      let strip1 = matches[y].replace("mul(", "");
-      let strip2 = strip1.replace(")", "");
-      const [input1, input2] = strip2.split(",");
-      const num1 = parseInt(input1);
-      const num2 = parseInt(input2);
+  let matches = input.match(re);
+  for (let y = 0; y < matches.length; y++) {
+    let strip1 = matches[y].replace("mul(", "");
+    let strip2 = strip1.replace(")", "");
+    const [input1, input2] = strip2.split(",");
+    const num1 = parseInt(input1);
+    const num2 = parseInt(input2);
 
-      products.push(num1 * num2);
-    }
+    products.push(num1 * num2);
+  }
+
+  return products.reduce((sum, value) => {
+    return sum + value;
+  }, 0);
+};
+
+const part1 = (rawInput: string) => {
+  const input = parseInput(rawInput);
+
+  let products = [];
+
+  for (let x = 0; x < input.length; x++) {
+    products.push(parseValidInput(input[x]));
   }
 
   return products
@@ -39,14 +49,22 @@ const part2 = (rawInput: string) => {
   for (let x = 0; x < input.length; x++) {
     const result = input[x].split("don't");
 
-    for (let y = 0; y < result.length; y++) {
-      if (y % 2 != 0) {
-        onResults.push(result[y]);
-      }
+    for (let y = 0; y < result.length; y += 2) {
+      onResults.push(result[y]);
     }
-    console.log(onResults);
   }
-  return;
+
+  let products = [];
+
+  for (let x = 0; x < onResults.length; x++) {
+    products.push(parseValidInput(onResults[x]));
+  }
+
+  return products
+    .reduce((sum, value) => {
+      return sum + value;
+    }, 0)
+    .toString();
 };
 
 run({
