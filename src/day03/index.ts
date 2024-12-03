@@ -1,8 +1,6 @@
 import run from "aocrunner";
 
-const parseInput = (rawInput: string) => {
-  return rawInput.split("\n");
-};
+const parseInput = (rawInput: string) => rawInput;
 
 const parseFunction = (input: string) => {
   let strip1 = input.replace("mul(", "");
@@ -38,9 +36,7 @@ const part1 = (rawInput: string) => {
 
   let products = [];
 
-  for (let x = 0; x < input.length; x++) {
-    products.push(parseValidInput(input[x]));
-  }
+  products.push(parseValidInput(input));
 
   return products
     .reduce((sum, value) => {
@@ -57,56 +53,69 @@ const part2 = (rawInput: string) => {
   const donotRe = /don't\(\)/g;
   let sum = 0;
 
-  for (let x = 0; x < input.length; x++) {
-    let match;
-    let products = [];
-    let dos = [{ index: 0 }];
-    let donts = [];
-    while ((match = re.exec(input[x]))) {
-      let product = parseFunction(match[0]);
-      products.push({ product: product, index: match.index });
-    }
+  let dos = [{ index: 0 }];
+  let donts = [];
+  let match;
+  let products = [];
 
-    let doMatch;
-    while ((doMatch = doRe.exec(input[x]))) {
-      dos.push({ index: doMatch.index });
-    }
-    let donotMatch;
-    while ((donotMatch = donotRe.exec(input[x]))) {
-      donts.push({ index: donotMatch.index });
-    }
+  // Add all valid functions to products with their index
+  while ((match = re.exec(input))) {
+    let product = parseFunction(match[0]);
+    products.push({ product: product, index: match.index });
+  }
 
-    donts.reverse();
-    dos.reverse();
+  // Get all do()'s with their index
+  let doMatch;
+  while ((doMatch = doRe.exec(input))) {
+    dos.push({ index: doMatch.index });
+  }
 
-    console.log(products);
-    console.log("Don'ts:", donts);
-    console.log("Dos:", dos);
+  // Get all don't()'s with their index
+  let donotMatch;
+  while ((donotMatch = donotRe.exec(input))) {
+    donts.push({ index: donotMatch.index });
+  }
 
-    let off = donts.pop()?.index;
-    let on = dos.pop()?.index;
+  // Reverse so we can just use pop()
+  donts.reverse();
+  dos.reverse();
 
-    for (let x = 0; x < products.length; x++) {
-      console.log("\nProduct: ", products[x]);
-      console.log("On: ", on);
-      console.log("Off: ", off);
-      if (
-        products[x].index > on &&
-        (products[x].index < off || off === undefined)
-      ) {
-        console.log(
-          `Valid: index (${products[x].index}) is between ${on} and ${off} `,
-        );
-        // sum.push(products[x].product);
-        sum += products[x].product;
-        products.slice(x, 1);
-      } else {
-        console.log(
-          `Invalid: index (${products[x].index}) is not between ${on} and ${off} `,
-        );
-        if (products[x].index > off) {
+  // console.log(products);
+  // console.log("Don'ts:", donts);
+  // console.log("Dos:", dos);
+
+  // console.log("\nLength of 'On':", dos.length);
+  // console.log("Length of 'Off':", donts.length);
+  // console.log("Don'ts:", donts);
+  // console.log("Dos:", dos);
+
+  let off = donts.pop()?.index;
+  let on = dos.pop()?.index;
+
+  for (let x = 0; x < products.length; x++) {
+    // console.log("\nProduct: ", products[x]);
+    // console.log("On: ", on);
+    // console.log("Off: ", off);
+    if (
+      products[x].index > on &&
+      on !== undefined &&
+      (products[x].index < off || off === undefined)
+    ) {
+      // console.log(
+      //   `Valid: index (${products[x].index}) is between ${on} and ${off} `,
+      // );
+      // sum.push(products[x].product);
+      sum += products[x].product;
+      products.slice(x, 1);
+    } else {
+      // console.log(
+      //   `Invalid: index (${products[x].index}) is not between ${on} and ${off} `,
+      // );
+      if (products[x].index > off) {
+        on = dos.pop()?.index;
+
+        while (off < on) {
           off = donts.pop()?.index;
-          on = dos.pop()?.index;
         }
       }
     }
@@ -129,6 +138,14 @@ run({
     tests: [
       {
         input: `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`,
+        expected: "48",
+      },
+      {
+        input: `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+don't()mul(32,64](mul(11,8)undo()?mul(8,5))`,
+        expected: "48",
+      },
+      {
+        input: `xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+don't()mul(32,64](mul(11,8)undo()do()?mul(8,5))`,
         expected: "48",
       },
     ],
