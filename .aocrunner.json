@@ -65,13 +65,15 @@
           "2078",
           "2485"
         ],
-        "time": 3.242957
+        "time": 2.314857
       },
       "part2": {
-        "solved": false,
-        "result": null,
-        "attempts": [],
-        "time": null
+        "solved": true,
+        "result": "1969",
+        "attempts": [
+          "1845"
+        ],
+        "time": 1.658908
       }
     },
     {

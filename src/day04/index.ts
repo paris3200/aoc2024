@@ -1,6 +1,6 @@
 import run from "aocrunner";
 
-const DEBUG = true;
+const DEBUG = false;
 
 const parseInput = (rawInput: string) => {
   return rawInput.split("\n");
@@ -204,6 +204,7 @@ const part2 = (rawInput: string) => {
   const lineLength = input[0].length;
   let visual = [];
   let count = 0;
+  let validAs = [];
 
   if (DEBUG) {
     for (let i = 0; i < input.length; i++) {
@@ -218,14 +219,49 @@ const part2 = (rawInput: string) => {
       // Beginning of XMAS
       if (char === "A") {
         //M in top left
-        if (i > 0 && j < lineLength) {
-          visual[i][j] = "A";
-          if (input[i - 1][j - 1] === "M" && input[i + 1][j + 1] === "S") {
+        if (
+          i > 0 &&
+          j > 0 &&
+          input[i - 1][j - 1] === "M" &&
+          i + 1 < lineCount &&
+          j + 1 < lineLength &&
+          input[i + 1][j + 1] === "S"
+        ) {
+          //M in top right
+          if (
+            (input[i + 1][j - 1] === "M" && input[i - 1][j + 1] === "S") ||
+            (input[i + 1][j - 1] === "S" && input[i - 1][j + 1] === "M")
+          ) {
             count += 1;
             if (DEBUG) {
-              visual[i - 1][j - 1] = input[i - 1][j - 1];
               visual[i][j] = input[i][j];
               visual[i + 1][j + 1] = input[i + 1][j + 1];
+              visual[i - 1][j - 1] = input[i - 1][j - 1];
+              visual[i - 1][j + 1] = input[i - 1][j + 1];
+              visual[i + 1][j - 1] = input[i - 1][j - 1];
+            }
+          }
+        }
+        //S in top left
+        if (
+          i > 0 &&
+          j > 0 &&
+          input[i - 1][j - 1] === "S" &&
+          i + 1 < lineCount &&
+          j + 1 < lineLength &&
+          input[i + 1][j + 1] === "M"
+        ) {
+          if (
+            (input[i + 1][j - 1] === "M" && input[i - 1][j + 1] === "S") ||
+            (input[i + 1][j - 1] === "S" && input[i - 1][j + 1] === "M")
+          ) {
+            count += 1;
+            if (DEBUG) {
+              visual[i][j] = input[i][j];
+              visual[i + 1][j + 1] = input[i + 1][j + 1];
+              visual[i - 1][j - 1] = input[i - 1][j - 1];
+              visual[i - 1][j + 1] = input[i - 1][j + 1];
+              visual[i + 1][j - 1] = input[i - 1][j - 1];
             }
           }
         }
@@ -235,7 +271,7 @@ const part2 = (rawInput: string) => {
   if (DEBUG) {
     printVisual(visual);
   }
-  return count;
+  return count.toString();
 };
 
 run({
@@ -276,5 +312,5 @@ MXMXAXMASX`,
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
