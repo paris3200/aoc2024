@@ -1,5 +1,7 @@
 import run from "aocrunner";
 
+const DEBUG = true;
+
 const parseInput = (rawInput: string) => {
   return rawInput.split("\n");
 };
@@ -22,16 +24,18 @@ const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
   let xmasCount = 0;
   let visual = [];
+  const lineCount = input.length;
+  const lineLength = input[0].length;
 
-  for (let i = 0; i < input.length; i++) {
-    visual.push(Array(input[i].length).fill(false));
+  if (DEBUG) {
+    for (let i = 0; i < input.length; i++) {
+      visual.push(Array(input[i].length).fill(false));
+    }
   }
 
   for (let i = 0; i < input.length; i++) {
     for (let j = 0; j < input[i].length; j++) {
       const char = input[i][j];
-      const lineLength = input[i].length;
-      const lineCount = input.length;
 
       // Beginning of XMAS
       if (char === "X") {
@@ -42,10 +46,12 @@ const part1 = (rawInput: string) => {
               if (input[i - 3][j] === "S") {
                 xmasCount += 1;
 
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i - 1][j] === false) visual[i - 1][j] = "M";
-                if (visual[i - 2][j] === false) visual[i - 2][j] = "A";
-                if (visual[i - 3][j] === false) visual[i - 3][j] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i - 1][j] === false) visual[i - 1][j] = "M";
+                  if (visual[i - 2][j] === false) visual[i - 2][j] = "A";
+                  if (visual[i - 3][j] === false) visual[i - 3][j] = "S";
+                }
               }
             }
           }
@@ -57,10 +63,16 @@ const part1 = (rawInput: string) => {
             if (input[i - 2][j + 2] === "A") {
               if (input[i - 3][j + 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i - 1][j + 1] === false) visual[i - 1][j + 1] = "M";
-                if (visual[i - 2][j + 2] === false) visual[i - 2][j + 2] = "A";
-                if (visual[i - 3][j + 3] === false) visual[i - 3][j + 3] = "S";
+
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i - 1][j + 1] === false)
+                    visual[i - 1][j + 1] = "M";
+                  if (visual[i - 2][j + 2] === false)
+                    visual[i - 2][j + 2] = "A";
+                  if (visual[i - 3][j + 3] === false)
+                    visual[i - 3][j + 3] = "S";
+                }
               }
             }
           }
@@ -72,10 +84,12 @@ const part1 = (rawInput: string) => {
             if (input[i][j + 2] === "A") {
               if (input[i][j + 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i][j + 1] === false) visual[i][j + 1] = "M";
-                if (visual[i][j + 2] === false) visual[i][j + 2] = "A";
-                if (visual[i][j + 3] === false) visual[i][j + 3] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i][j + 1] === false) visual[i][j + 1] = "M";
+                  if (visual[i][j + 2] === false) visual[i][j + 2] = "A";
+                  if (visual[i][j + 3] === false) visual[i][j + 3] = "S";
+                }
               }
             }
           }
@@ -87,10 +101,15 @@ const part1 = (rawInput: string) => {
             if (input[i + 2][j + 2] === "A") {
               if (input[i + 3][j + 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i + 1][j + 1] === false) visual[i + 1][j + 1] = "M";
-                if (visual[i + 2][j + 2] === false) visual[i + 2][j + 2] = "A";
-                if (visual[i + 3][j + 3] === false) visual[i + 3][j + 3] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i + 1][j + 1] === false)
+                    visual[i + 1][j + 1] = "M";
+                  if (visual[i + 2][j + 2] === false)
+                    visual[i + 2][j + 2] = "A";
+                  if (visual[i + 3][j + 3] === false)
+                    visual[i + 3][j + 3] = "S";
+                }
               }
             }
           }
@@ -102,10 +121,12 @@ const part1 = (rawInput: string) => {
             if (input[i + 2][j] === "A") {
               if (input[i + 3][j] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i + 1][j] === false) visual[i + 1][j] = "M";
-                if (visual[i + 2][j] === false) visual[i + 2][j] = "A";
-                if (visual[i + 3][j] === false) visual[i + 3][j] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i + 1][j] === false) visual[i + 1][j] = "M";
+                  if (visual[i + 2][j] === false) visual[i + 2][j] = "A";
+                  if (visual[i + 3][j] === false) visual[i + 3][j] = "S";
+                }
               }
             }
           }
@@ -116,10 +137,15 @@ const part1 = (rawInput: string) => {
             if (input[i + 2][j - 2] === "A") {
               if (input[i + 3][j - 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i + 1][j - 1] === false) visual[i + 1][j - 1] = "M";
-                if (visual[i + 2][j - 2] === false) visual[i + 2][j - 2] = "A";
-                if (visual[i + 3][j - 3] === false) visual[i + 3][j - 3] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i + 1][j - 1] === false)
+                    visual[i + 1][j - 1] = "M";
+                  if (visual[i + 2][j - 2] === false)
+                    visual[i + 2][j - 2] = "A";
+                  if (visual[i + 3][j - 3] === false)
+                    visual[i + 3][j - 3] = "S";
+                }
               }
             }
           }
@@ -131,10 +157,13 @@ const part1 = (rawInput: string) => {
             if (input[i][j - 2] === "A") {
               if (input[i][j - 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i][j - 1] === false) visual[i][j - 1] = "M";
-                if (visual[i][j - 2] === false) visual[i][j - 2] = "A";
-                if (visual[i][j - 3] === false) visual[i][j - 3] = "S";
+
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i][j - 1] === false) visual[i][j - 1] = "M";
+                  if (visual[i][j - 2] === false) visual[i][j - 2] = "A";
+                  if (visual[i][j - 3] === false) visual[i][j - 3] = "S";
+                }
               }
             }
           }
@@ -146,10 +175,15 @@ const part1 = (rawInput: string) => {
             if (input[i - 2][j - 2] === "A") {
               if (input[i - 3][j - 3] === "S") {
                 xmasCount += 1;
-                if (visual[i][j] === false) visual[i][j] = "X";
-                if (visual[i - 1][j - 1] === false) visual[i - 1][j - 1] = "M";
-                if (visual[i - 2][j - 2] === false) visual[i - 2][j - 2] = "A";
-                if (visual[i - 3][j - 3] === false) visual[i - 3][j - 3] = "S";
+                if (DEBUG) {
+                  if (visual[i][j] === false) visual[i][j] = "X";
+                  if (visual[i - 1][j - 1] === false)
+                    visual[i - 1][j - 1] = "M";
+                  if (visual[i - 2][j - 2] === false)
+                    visual[i - 2][j - 2] = "A";
+                  if (visual[i - 3][j - 3] === false)
+                    visual[i - 3][j - 3] = "S";
+                }
               }
             }
           }
@@ -157,12 +191,51 @@ const part1 = (rawInput: string) => {
       }
     }
   }
+
+  if (DEBUG) {
+    printVisual(visual);
+  }
   return xmasCount.toString();
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
-  return;
+  const lineCount = input.length;
+  const lineLength = input[0].length;
+  let visual = [];
+  let count = 0;
+
+  if (DEBUG) {
+    for (let i = 0; i < input.length; i++) {
+      visual.push(Array(input[i].length).fill(false));
+    }
+  }
+
+  for (let i = 0; i < input.length; i++) {
+    for (let j = 0; j < input[i].length; j++) {
+      const char = input[i][j];
+
+      // Beginning of XMAS
+      if (char === "A") {
+        //M in top left
+        if (i > 0 && j < lineLength) {
+          visual[i][j] = "A";
+          if (input[i - 1][j - 1] === "M" && input[i + 1][j + 1] === "S") {
+            count += 1;
+            if (DEBUG) {
+              visual[i - 1][j - 1] = input[i - 1][j - 1];
+              visual[i][j] = input[i][j];
+              visual[i + 1][j + 1] = input[i + 1][j + 1];
+            }
+          }
+        }
+      }
+    }
+  }
+  if (DEBUG) {
+    printVisual(visual);
+  }
+  return count;
 };
 
 run({
