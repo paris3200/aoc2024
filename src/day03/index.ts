@@ -33,16 +33,7 @@ const parseValidInput = (input: string): number => {
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
-
-  let products = [];
-
-  products.push(parseValidInput(input));
-
-  return products
-    .reduce((sum, value) => {
-      return sum + value;
-    }, 0)
-    .toString();
+  return parseValidInput(input).toString();
 };
 
 const part2 = (rawInput: string) => {
@@ -80,37 +71,17 @@ const part2 = (rawInput: string) => {
   donts.reverse();
   dos.reverse();
 
-  // console.log(products);
-  // console.log("Don'ts:", donts);
-  // console.log("Dos:", dos);
-
-  // console.log("\nLength of 'On':", dos.length);
-  // console.log("Length of 'Off':", donts.length);
-  // console.log("Don'ts:", donts);
-  // console.log("Dos:", dos);
-
   let off = donts.pop()?.index;
   let on = dos.pop()?.index;
 
   for (let x = 0; x < products.length; x++) {
-    // console.log("\nProduct: ", products[x]);
-    // console.log("On: ", on);
-    // console.log("Off: ", off);
     if (
       products[x].index > on &&
-      on !== undefined &&
       (products[x].index < off || off === undefined)
     ) {
-      // console.log(
-      //   `Valid: index (${products[x].index}) is between ${on} and ${off} `,
-      // );
-      // sum.push(products[x].product);
       sum += products[x].product;
       products.slice(x, 1);
     } else {
-      // console.log(
-      //   `Invalid: index (${products[x].index}) is not between ${on} and ${off} `,
-      // );
       if (products[x].index > off) {
         on = dos.pop()?.index;
 
