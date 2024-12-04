@@ -1,34 +1,87 @@
 import run from "aocrunner";
 
-const XMAS = ["X", "M", "A", "S"];
-
 const parseInput = (rawInput: string) => {
   return rawInput.split("\n");
 };
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
+  let xmasCount = 0;
+  let visual = [];
 
-  let startCoords: [number, number] = [];
-  const collection = new Map();
+  
+  for (let i = 0; i < input.length; i++) {
+    visual.push(Array(input[i].length).fill(false))
+  }
 
   for (let i = 0; i < input.length; i++) {
     for (let j = 0; j < input[i].length; j++) {
       const char = input[i][j];
+      const lineLength = input[i].length;
+      const lineCount = input.length;
+      const wordLength = 4;
 
-      if (XMAS[0].includes(char)) {
-        startCoords.push([i, j]);
-      }
-
-      if (XMAS.includes(char)) {
-        char === "X" && startCoords.push([i, j]);
-        collection.set(`${i}-${j}`);
+      // Beginning of XMAS
+      if (char === "X") {
+        // North
+        if (i >= wordLength) {
+          if (input[i - 1][j] === "M") {
+            if (input[i - 2][j] === "A") {
+              if (input[i - 3][j] === "S") {
+                // xmasCount += 1;
+                // if (visual[i][j] === ".") visual[i][j] = "X";
+                // if (visual[i - 1][j] === ".") visual[i][j] = "M";
+                // if (visual[i - 2][j] === ".") visual[i][j] = "A";
+                // if (visual[i - 3][j] === ".") visual[i][j] = "S";
+              }
+            }
+          }
+        }
+        // North East
+        if (i >= wordLength && j <= lineLength - wordLength) {
+          if (input[i - 1][j + 1] === "M") {
+            if (input[i - 2][j + 2] === "A") {
+              if (input[i - 3][j + 3] === "S") {
+                // xmasCount += 1;
+              }
+            }
+          }
+        }
+        // East
+        if (i >= wordLength && j <= lineLength - wordLength) {
+          if (input[i][j + 1] === "M") {
+            if (input[i][j + 2] === "A") {
+              if (input[i][j + 3] === "S") {
+                // xmasCount += 1;
+              }
+            }
+          }
+        }
+        // South East
+        if (i <= lineCount - wordLength && j <= lineLength - wordLength) {
+          // console.log(`South East: ${i}, ${j}`);
+          if (input[i + 1][j + 1] === "M") {
+            // console.log(`True ${i + 1}, ${j + 1}`);
+            if (input[i + 2][j + 2] === "A") {
+              // console.log(`True ${i}, ${j}`);
+              if (input[i + 3][j + 3] === "S") {
+                xmasCount += 1;
+              }
+            }
+          }
+        }
+        // South
+        // South West
+        // West
+        // North West
       }
     }
   }
-  console.log(startCoords);
-
-  return;
+  for (let i = 0; i < visual.length; i++) {
+  for (let j = 0; i < visual[j].length; i++) {
+    console.log(visual[i][j])
+  }
+  return xmasCount;
 };
 
 const part2 = (rawInput: string) => {
@@ -42,15 +95,15 @@ run({
     tests: [
       {
         input: `MMMSXXMASM
-          MSAMXMSMSA
-          AMXSXMAAMM
-          MSAMASMSMX
-          XMASAMXAMM
-          XXAMMXXAMA
-          SMSMSASXSS
-          SAXAMASAAA
-          MAMMMXMMMM
-          MXMXAXMASX`,
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX`,
         expected: "18",
       },
     ],
