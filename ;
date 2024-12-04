@@ -4,19 +4,17 @@ const parseInput = (rawInput: string) => {
   return rawInput.split("\n");
 };
 
-const printVisual = (visual: [[boolean | string]]) => {
-  for (let i = 0; i < visual.length; i++) {
-    let row = "";
-    for (let j = 0; j < visual[i].length; j++) {
-      if (visual[i][j] === false) {
-        row += ".";
-      } else {
-        row += visual[i][j];
-      }
-    }
-    console.log(row);
-  }
-};
+// const getCords = (starting: [number, number], direction: string) => {
+//   const [i, j] = starting;
+//   let cords = [];
+//
+//   if (direction === "N") {
+//     cords.push([i - 1, j]);
+//     cords.push([i - 2, j]);
+//     cords.push([i - 2, j]);
+//   }
+//   console.log(cords);
+// };
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
@@ -82,7 +80,7 @@ const part1 = (rawInput: string) => {
         }
 
         // South East
-        if (i + 3 < lineCount && j + 2 < lineLength) {
+        if (i + 2 < lineCount && j + 2 < lineLength) {
           if (input[i + 1][j + 1] === "M") {
             if (input[i + 2][j + 2] === "A") {
               if (input[i + 3][j + 3] === "S") {
@@ -97,7 +95,7 @@ const part1 = (rawInput: string) => {
         }
 
         // South
-        if (i + 3 < lineCount) {
+        if (i + 2 < lineCount) {
           if (input[i + 1][j] === "M") {
             if (input[i + 2][j] === "A") {
               if (input[i + 3][j] === "S") {
@@ -111,7 +109,7 @@ const part1 = (rawInput: string) => {
           }
         }
         // South West
-        if (i + 3 < lineCount && j > 2) {
+        if (i + 2 < lineCount && j > 2) {
           if (input[i + 1][j - 1] === "M") {
             if (input[i + 2][j - 2] === "A") {
               if (input[i + 3][j - 3] === "S") {
@@ -157,11 +155,23 @@ const part1 = (rawInput: string) => {
       }
     }
   }
+  for (let i = 0; i < visual.length; i++) {
+    let row = "";
+    for (let j = 0; j < visual[i].length; j++) {
+      if (visual[i][j] === false) {
+        row += ".";
+      } else {
+        row += visual[i][j];
+      }
+    }
+    console.log(row);
+  }
   return xmasCount.toString();
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
+
   return;
 };
 
@@ -186,19 +196,10 @@ MXMXAXMASX`,
   },
   part2: {
     tests: [
-      {
-        input: `MMMSXXMASM
-MSAMXMSMSA
-AMXSXMAAMM
-MSAMASMSMX
-XMASAMXAMM
-XXAMMXXAMA
-SMSMSASXSS
-SAXAMASAAA
-MAMMMXMMMM
-MXMXAXMASX`,
-        expected: "9",
-      },
+      // {
+      //   input: ``,
+      //   expected: "",
+      // },
     ],
     solution: part2,
   },
