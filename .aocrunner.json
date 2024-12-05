@@ -65,7 +65,7 @@
           "2078",
           "2485"
         ],
-        "time": 2.314857
+        "time": 2.255317
       },
       "part2": {
         "solved": true,
@@ -73,15 +73,15 @@
         "attempts": [
           "1845"
         ],
-        "time": 1.658908
+        "time": 1.572098
       }
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "6505",
         "attempts": [],
-        "time": null
+        "time": 5.722465
       },
       "part2": {
         "solved": false,
