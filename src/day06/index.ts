@@ -42,13 +42,28 @@ const countVisited = () => {
   return count;
 };
 
+const getVisited = () => {
+  let visited = new Set();
+  for (let i = 0; i < GRID.length; i++) {
+    for (let j = 0; j < GRID[i].length; j++) {
+      if (GRID[i][j] === true) {
+        visited.add([i, j]);
+      }
+    }
+  }
+  return visited;
+};
+
 const setVisited = (i: number, j: number) => {
   if (GRID[i][j] !== true) {
     GRID[i][j] = true;
   }
 };
 
-const move = (direction: string, starting: [number, number]): number[] | -1 => {
+const move = (
+  direction: string,
+  starting: [number, number],
+): number[] | -1 | 1 => {
   switch (direction) {
     case "N":
       for (let i = starting[0]; i >= 0; i--) {
@@ -104,9 +119,9 @@ const move = (direction: string, starting: [number, number]): number[] | -1 => {
   return -1;
 };
 
-const part1 = (rawInput: string) => {
-  let origin = parseInput(rawInput);
-  let point: number[] | -1 = origin;
+const solveGrid = (start: number[]): boolean => {
+  let point = start;
+
   let directions = ["N", "E", "S", "W"];
   let directionCount = 0;
 
@@ -118,19 +133,70 @@ const part1 = (rawInput: string) => {
     }
   };
 
+  const visitedPoints = new Map();
+
   while (Array.isArray(point)) {
+    let pointLabel = point[0] + "-" + point[1] + directions[directionCount];
+    if (visitedPoints.has(pointLabel)) {
+      return false;
+    } else {
+      visitedPoints.set(pointLabel, true);
+    }
     point = move(directions[directionCount], point);
     updateDirectionCount();
   }
+  // console.log(visitedPoints);
 
-  printGrid();
+  if (point == -1) {
+    return true;
+  }
+
+  return false;
+};
+
+const part1 = (rawInput: string) => {
+  let origin = parseInput(rawInput);
+  solveGrid(origin);
+  // printGrid();
   return countVisited().toString();
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+  const origin = parseInput(rawInput);
+  const gridCopyUnsolved = structuredClone(GRID);
+  solveGrid(origin);
+  let gridCopySolved = structuredClone(GRID);
 
-  return;
+  let visitedPoints = getVisited();
+  let loopCount = 0;
+
+  let addedPoints = [];
+  visitedPoints.forEach((points) => {
+    GRID = structuredClone(gridCopyUnsolved);
+    GRID[points[0]][points[1]] = "#";
+    let isSolved = solveGrid(origin);
+    if (isSolved === false) {
+      addedPoints.push([points[0], points[1]]);
+      loopCount += 1;
+    }
+  });
+
+  // console.log(addedPoints);
+  // addedPoints.forEach((point) => {
+  //   console.log("Point:", point);
+  //   GRID = structuredClone(gridCopyUnsolved);
+  //   GRID[point[0]][point[1]] = "0";
+  //   printGrid();
+  //   console.log();
+  // });
+
+  // GRID = gridCopyUnsolved;
+  // GRID[6][3] = "#";
+  // let isLoop = solveGrid(origin);
+  // printGrid();
+  // console.log(isLoop);
+
+  return loopCount.toString();
 };
 
 run({
@@ -154,10 +220,19 @@ run({
   },
   part2: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#...`,
+        expected: "6",
+      },
     ],
     solution: part2,
   },
