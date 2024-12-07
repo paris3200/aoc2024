@@ -46,6 +46,8 @@ const countVisited = () => {
 };
 
 const getVisited = () => {
+  console.log("Checking visited...");
+  printGrid();
   let visited = new Set();
   for (let i = 0; i < GRID.length; i++) {
     for (let j = 0; j < GRID[i].length; j++) {
@@ -74,13 +76,10 @@ const move = (
           return [i + 1, starting[1]];
         } else if (i - 1 < 0) {
           setVisited(i, starting[1]);
-          if (updateVisited([i, starting[1]], "N") == false) {
-            return 1;
-          }
           return -1;
         }
         setVisited(i, starting[1]);
-        if (updateVisited([i, starting[1]], "N") == false) {
+        if (updateVisited([i, starting[1]], "N") === false) {
           return 1;
         }
       }
@@ -92,13 +91,10 @@ const move = (
           return [starting[0], j - 1];
         } else if (j + 1 == GRID[0].length) {
           setVisited(starting[0], j);
-          if (updateVisited([starting[0], j], "E") == false) {
-            return 1;
-          }
           return -1;
         }
         setVisited(starting[0], j);
-        if (updateVisited([starting[0], j], "E") == false) {
+        if (updateVisited([starting[0], j], "E") === false) {
           return 1;
         }
       }
@@ -110,13 +106,10 @@ const move = (
           return [i - 1, starting[1]];
         } else if (i + 1 > GRID.length - 1) {
           setVisited(i, starting[1]);
-          if (updateVisited([i, starting[1]], "S") == false) {
-            return 1;
-          }
           return -1;
         }
         setVisited(i, starting[1]);
-        if (updateVisited([i, starting[1]], "S") == false) {
+        if (updateVisited([i, starting[1]], "S") === false) {
           return 1;
         }
       }
@@ -131,7 +124,7 @@ const move = (
           return -1;
         }
         setVisited(starting[0], j);
-        if (updateVisited([starting[0], j], "W") == false) {
+        if (updateVisited([starting[0], j], "W") === false) {
           return 1;
         }
       }
@@ -196,44 +189,45 @@ const part2 = (rawInput: string) => {
 
   // Copy Original Grid
   const gridCopyUnsolved = structuredClone(GRID);
-
   solveGrid(origin);
+  printGrid();
 
   let visitedPointArray = getVisited();
+  console.log("Visited Points Array:", visitedPointArray);
   let loopCount = 0;
 
   // Which points resulted in a loop.
   let addedPoints = [];
 
-  visitedPointArray.forEach((points: [number, number]) => {
-    visitedPoints.clear();
-    console.log("Visited Points Map:", visitedPoints);
-    GRID = structuredClone(gridCopyUnsolved);
-    GRID[points[0]][points[1]] = "#";
-    let isSolved = solveGrid(origin);
-    if (isSolved === false) {
-      if (DEBUG) {
-        GRID[origin[0]][origin[1]] = "^";
-        GRID[points[0]][points[1]] = "0";
-        printGrid();
-      }
-      addedPoints.push([points[0], points[1]]);
-      loopCount += 1;
-    }
-  });
-  // const points = [7, 6];
-  // GRID = structuredClone(gridCopyUnsolved);
-  // GRID[points[0]][points[1]] = "#";
-  // let isSolved = solveGrid(origin);
-  // if (isSolved === false) {
-  //   //Obstacle Added at this location
-  //   GRID[origin[0]][origin[1]] = "^";
-  //   GRID[points[0]][points[1]] = "0";
-  //
-  //   console.log(printGrid());
-  //   addedPoints.push([points[0], points[1]]);
-  //   loopCount += 1;
-  // }
+  // visitedPointArray.forEach((points: [number, number]) => {
+  //   visitedPoints.clear();
+  //   console.log("Visited Points Map:", visitedPoints);
+  //   GRID = structuredClone(gridCopyUnsolved);
+  //   GRID[points[0]][points[1]] = "#";
+  //   let isSolved = solveGrid(origin);
+  //   if (isSolved === false) {
+  //     if (DEBUG) {
+  //       GRID[origin[0]][origin[1]] = "^";
+  //       GRID[points[0]][points[1]] = "0";
+  //       printGrid();
+  //     }
+  //     addedPoints.push([points[0], points[1]]);
+  //     loopCount += 1;
+  //   }
+  // });
+  const points = [7, 6];
+  GRID = structuredClone(gridCopyUnsolved);
+  GRID[points[0]][points[1]] = "#";
+  let isSolved = solveGrid(origin);
+  if (isSolved === false) {
+    //Obstacle Added at this location
+    GRID[origin[0]][origin[1]] = "^";
+    GRID[points[0]][points[1]] = "0";
+
+    console.log(printGrid());
+    addedPoints.push([points[0], points[1]]);
+    loopCount += 1;
+  }
   return loopCount.toString();
 };
 
