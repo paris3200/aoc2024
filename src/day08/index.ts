@@ -1,5 +1,7 @@
 import run from "aocrunner";
 
+import { getPermutations, printGrid } from "../utils/index.js";
+
 let debug = false;
 const log = (...str: any[]) => {
   if (debug) {
@@ -13,12 +15,6 @@ const parseInput = (rawInput: string): string[][] => {
     .split("\n")
     .filter((line) => line.trim())
     .map((line) => line.split(""));
-};
-
-const printGrid = (grid: ReadonlyArray<ReadonlyArray<number | string>>) => {
-  for (const row of grid) {
-    console.log(row.join(""));
-  }
 };
 
 const getAntennas = (
@@ -40,28 +36,6 @@ const getAntennas = (
     }
   }
 
-  return result;
-};
-
-const getPermutations = (items: number, options: string[]): string[][] => {
-  const result: string[][] = [];
-
-  function backtrack(permutation: string[], remainingOptions: string[]): void {
-    if (permutation.length === items) {
-      result.push([...permutation]);
-      return;
-    }
-
-    for (let i = 0; i < remainingOptions.length; i++) {
-      const option = remainingOptions[i];
-      backtrack(
-        [...permutation, option],
-        [...remainingOptions.slice(0, i), ...remainingOptions.slice(i + 1)],
-      );
-    }
-  }
-
-  backtrack([], options);
   return result;
 };
 
@@ -223,7 +197,9 @@ const part2 = (rawInput: string) => {
 
   if (debug) {
     console.log(antinode);
-    const points = Array.from(antinode, (pair) => pair.split(",").map(Number));
+    const points = Array.from(antinode, (pair: string) =>
+      pair.split(",").map(Number),
+    );
     console.log(points);
     for (const point of points) {
       input[point[0]][point[1]] = "#";
