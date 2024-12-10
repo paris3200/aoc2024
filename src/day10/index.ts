@@ -90,7 +90,7 @@ const calcTotalTrailHeads = (trailHeads: Map<string, string[]>): number => {
 };
 
 const part1 = (rawInput: string) => {
-  const { graph, trailHeads, peaks } = parseInput(rawInput);
+  const { graph, trailHeads } = parseInput(rawInput);
 
   trailHeads.forEach((_, point) => {
     let th = trailHeads.get(point);
@@ -126,9 +126,39 @@ const part1 = (rawInput: string) => {
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+  const { graph, trailHeads } = parseInput(rawInput);
 
-  return;
+  trailHeads.forEach((_, point) => {
+    let th = trailHeads.get(point);
+    let search_queue = [];
+    search_queue.push(point);
+
+    let count = 0;
+    while (search_queue.length > 0) {
+      let vertix = search_queue.shift();
+
+      let v1 = graph.vertices.get(vertix);
+      if (v1) {
+        if (parseInt(v1.value) === 9) {
+          // console.log("Peak Found", vertix);
+          th.push(vertix);
+          // return true;
+        } else {
+          for (const vertice of v1?.edges) {
+            let neighbor = graph.vertices.get(vertice);
+            if (neighbor) {
+              if (parseInt(v1.value) + 1 === parseInt(neighbor.value)) {
+                search_queue.push(vertice);
+              }
+            }
+          }
+        }
+        count += 1;
+      }
+    }
+    return false;
+  });
+  return calcTotalTrailHeads(trailHeads).toString();
 };
 
 run({
@@ -158,10 +188,15 @@ run({
   },
   part2: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `012345
+123456
+234567
+345678
+4.6789
+56789.`,
+        expected: "227",
+      },
     ],
     solution: part2,
   },

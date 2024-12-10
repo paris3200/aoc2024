@@ -145,6 +145,7 @@
         "result": null,
         "attempts": [],
         "time": null
+        "time": 0.847719
       },
       "part2": {
         "solved": false,
@@ -158,13 +159,13 @@
         "solved": true,
         "result": "468",
         "attempts": [],
-        "time": 14.246903
+        "time": 6.522632
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "966",
         "attempts": [],
-        "time": null
+        "time": 5.222564
       }
     },
     {
