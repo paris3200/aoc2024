@@ -5,45 +5,8 @@ type Vertex = {
   edges: string[];
 };
 
-const parseInput = (rawInput: string) => rawInput.split("\n");
-
-class Graph {
-  vertices: Map<string, Vertex>;
-  constructor() {
-    this.vertices = new Map();
-  }
-
-  addVertex(name: string, value: number): boolean {
-    if (!this.vertices.has(name)) {
-      this.vertices.set(name, { value, edges: [] });
-      return true;
-    }
-    return false;
-  }
-
-  addEdge(vertex1: string, vertex2: string): boolean {
-    const v1 = this.vertices.get(vertex1);
-    const v2 = this.vertices.get(vertex2);
-
-    if (!v1 || !v2) {
-      console.error(`One or both vertices not found: ${vertex1}, ${vertex2}`);
-      return false;
-    }
-
-    if (!v1.edges.includes(vertex2)) {
-      v1.edges.push(vertex2);
-    }
-
-    if (!v2.edges.includes(vertex1)) {
-      v2.edges.push(vertex1);
-    }
-
-    return true;
-  }
-}
-
-const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+const parseInput = (rawInput: string) => {
+  const input = rawInput.split("\n");
   let graph = new Graph();
   let trailHeads = new Map();
   let peaks = new Map();
@@ -80,20 +43,68 @@ const part1 = (rawInput: string) => {
     }
   }
 
-  trailHeads.forEach((trailhead, point) => {
+  return { graph, trailHeads, peaks };
+};
+
+class Graph {
+  vertices: Map<string, Vertex>;
+  constructor() {
+    this.vertices = new Map();
+  }
+
+  addVertex(name: string, value: number): boolean {
+    if (!this.vertices.has(name)) {
+      this.vertices.set(name, { value, edges: [] });
+      return true;
+    }
+    return false;
+  }
+
+  addEdge(vertex1: string, vertex2: string): boolean {
+    const v1 = this.vertices.get(vertex1);
+    const v2 = this.vertices.get(vertex2);
+
+    if (!v1 || !v2) {
+      console.error(`One or both vertices not found: ${vertex1}, ${vertex2}`);
+      return false;
+    }
+
+    if (!v1.edges.includes(vertex2)) {
+      v1.edges.push(vertex2);
+    }
+
+    if (!v2.edges.includes(vertex1)) {
+      v2.edges.push(vertex1);
+    }
+
+    return true;
+  }
+}
+
+const calcTotalTrailHeads = (trailHeads: Map<string, string[]>): number => {
+  let total = 0;
+  for (const peaks of trailHeads.values()) {
+    total += peaks.length;
+  }
+  return total;
+};
+
+const part1 = (rawInput: string) => {
+  const { graph, trailHeads, peaks } = parseInput(rawInput);
+
+  trailHeads.forEach((_, point) => {
     let th = trailHeads.get(point);
-    console.log("Trailhead: ", point);
     let search_queue = [];
     search_queue.push(point);
 
     let count = 0;
-    while (search_queue.length > 0 && count < 10000) {
+    while (search_queue.length > 0) {
       let vertix = search_queue.shift();
 
       let v1 = graph.vertices.get(vertix);
       if (v1) {
         if (parseInt(v1.value) === 9 && !th.includes(vertix)) {
-          console.log("Peak Found", vertix);
+          // console.log("Peak Found", vertix);
           th.push(vertix);
           // return true;
         } else {
@@ -111,17 +122,7 @@ const part1 = (rawInput: string) => {
     }
     return false;
   });
-
-  // console.log(graph.vertices);
-  console.log("TrailHeads", trailHeads);
-  // console.log("Peaks", peaks);
-
-  let total = 0;
-  for (const [key, values] of trailHeads.entries()) {
-    total += values.length;
-  }
-
-  return total.toString();
+  return calcTotalTrailHeads(trailHeads).toString();
 };
 
 const part2 = (rawInput: string) => {
