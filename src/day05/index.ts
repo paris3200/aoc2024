@@ -44,40 +44,6 @@ const validUpdate = (update: string[]) => {
   return true;
 };
 
-const solveUpdate = (update: string[]): number => {
-  // console.log("\nOrginal Input", update);
-  const index = validUpdate(update);
-  if (index === true) {
-    const middleIndex = Math.floor(update.length / 2);
-    console.log(`Valid!`);
-    return parseInt(update[middleIndex]);
-  } else {
-    console.log("\nInvalid Update:", update);
-    console.log("Error found at:", index);
-    const afterUpdates = INSTRUCTIONS.get(update[index]);
-    // console.log("After Updates:", afterUpdates);
-    const value1 = update[index];
-    let value2;
-    let value2Index;
-    const previousUpdate = update.slice(0, index);
-    for (const record in afterUpdates) {
-      if (previousUpdate.includes(afterUpdates[record])) {
-        value2 = afterUpdates[record];
-        value2Index = previousUpdate.indexOf(value2);
-      }
-    }
-    console.log(
-      `${value1} at index ${index} needs to be before ${value2} at index ${value2Index}`,
-    );
-    console.log("Switching...");
-    update.splice(value2Index, 1, value1);
-    update.splice(index, 1, value2);
-    // update.splice(value2Index, 1, value1);
-    console.log(`${update}`);
-    return solveUpdate(update);
-  }
-};
-
 const part1 = (rawInput: string) => {
   const updates = parseInput(rawInput);
   let validMiddles = [];
@@ -98,8 +64,9 @@ const part1 = (rawInput: string) => {
 };
 
 const part2 = (rawInput: string) => {
+  const DEBUG = true;
   const updates = parseInput(rawInput);
-  let validMiddles = [];
+  let validMiddles: string[] = [];
   let invalidUpdates = [];
 
   for (let x = 0; x < updates.length; x++) {
@@ -110,11 +77,33 @@ const part2 = (rawInput: string) => {
   }
 
   while (invalidUpdates.length != 0) {
-    let invalidUpdate = invalidUpdates.pop();
-    validMiddles.push(solveUpdate(invalidUpdate));
+    let invalidUpdate = invalidUpdates.pop()?.reverse();
+    if (DEBUG) console.log(invalidUpdate);
+
+    // let sorted = structuredClone(invalidUpdate)
+    let sorted: number[] = [];
+    invalidUpdate?.forEach((key, index) => {
+      if (sorted.length === 0) {
+        sorted.push(key);
+      } else {
+        console.log("Key:", key);
+        let previous = sorted[index - 1];
+        let instructions = INSTRUCTIONS.get(key);
+
+        if (instructions) {
+          if (instructions.includes(previous)) {
+            sorted.push(key);
+          } else {
+            console.log("Need to slice");
+          }
+        } else {
+          sorted.push(key);
+        }
+      }
+      if (DEBUG) console.log(sorted);
+    });
   }
 
-  console.log(validMiddles);
   return validMiddles
     .reduce((sum, value) => {
       return sum + parseInt(value);
@@ -197,5 +186,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: false,
+  onlyTests: true,
 });
