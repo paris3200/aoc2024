@@ -1,6 +1,7 @@
 import run from "aocrunner";
 
 const stoneValue = new Map();
+let blinksSaved = 0;
 
 const parseInput = (rawInput: string) => {
   return rawInput
@@ -30,6 +31,7 @@ const blinkStone = (stone: string, blinksRemaining: number): number => {
   const key = `${stone}-${blinksRemaining}`;
 
   if (stoneValue.has(key)) {
+    blinksSaved += blinksRemaining;
     return stoneValue.get(key)!;
   }
 
@@ -38,9 +40,10 @@ const blinkStone = (stone: string, blinksRemaining: number): number => {
   if (blinksRemaining === 0) {
     result = 1;
   } else {
-    const parsedStones = parseStone(stone);
+    const parsedStones: string[] = parseStone(stone);
     result = parsedStones.reduce(
-      (sum, nextStone) => sum + blinkStone(nextStone, blinksRemaining - 1),
+      (sum: number, nextStone: string): number =>
+        sum + blinkStone(nextStone, blinksRemaining - 1),
       0,
     );
   }
@@ -57,6 +60,7 @@ const part1 = (rawInput: string) => {
   for (let stone of input) {
     count += blinkStone(stone, 25);
   }
+  console.log("Blinks Saved", blinksSaved);
   return count.toString();
 };
 
@@ -68,6 +72,7 @@ const part2 = (rawInput: string) => {
     count += blinkStone(stone, 75);
   }
 
+  console.log("Blinks Saved", blinksSaved);
   return count.toString();
 };
 
